@@ -8,8 +8,8 @@ const fields = {
 };
 
 const avatars = {
-  female: ['assets/avatars/woman-1.jpg', 'assets/avatars/woman-2.jpg', 'assets/avatars/woman-3.jpg'],
-  male: ['assets/avatars/man-1.jpg', 'assets/avatars/man-2.jpg', 'assets/avatars/man-3.jpg']
+  female: Array.from({ length:15 }, (_, index) => `assets/avatars/woman-${index + 1}.jpg`),
+  male: Array.from({ length:15 }, (_, index) => `assets/avatars/man-${index + 1}.jpg`)
 };
 const state = { photo: makePlaceholder(), avatar: avatars.female[0] };
 const formatState = {
@@ -28,8 +28,32 @@ const people = [
   { name:'Aleksandra Nowak', gender:'female' },
   { name:'Karolina Lis', gender:'female' },
   { name:'Natalia Borkowska', gender:'female' },
+  { name:'Joanna Kowalska', gender:'female' },
+  { name:'Anna Wiśniewska', gender:'female' },
+  { name:'Zofia Kamińska', gender:'female' },
+  { name:'Julia Lewandowska', gender:'female' },
+  { name:'Katarzyna Wójcik', gender:'female' },
+  { name:'Magdalena Mazur', gender:'female' },
+  { name:'Alicja Krawczyk', gender:'female' },
+  { name:'Monika Piotrowska', gender:'female' },
+  { name:'Paulina Grabowska', gender:'female' },
+  { name:'Ewa Pawłowska', gender:'female' },
+  { name:'Weronika Michalska', gender:'female' },
   { name:'Jan Wysocki', gender:'male' },
-  { name:'Michał Domański', gender:'male' }
+  { name:'Michał Domański', gender:'male' },
+  { name:'Piotr Kowalski', gender:'male' },
+  { name:'Tomasz Nowak', gender:'male' },
+  { name:'Jakub Wiśniewski', gender:'male' },
+  { name:'Mateusz Kamiński', gender:'male' },
+  { name:'Adam Lewandowski', gender:'male' },
+  { name:'Krzysztof Wójcik', gender:'male' },
+  { name:'Paweł Mazur', gender:'male' },
+  { name:'Marcin Krawczyk', gender:'male' },
+  { name:'Łukasz Piotrowski', gender:'male' },
+  { name:'Bartosz Grabowski', gender:'male' },
+  { name:'Wojciech Pawłowski', gender:'male' },
+  { name:'Kamil Michalski', gender:'male' },
+  { name:'Maciej Zawadzki', gender:'male' }
 ];
 const texts = [
   'Czasem najlepsze pomysły zaczynają się od zwykłego spotkania. Dziękuję za rozmowy, energię i wspólny dzień ✨',
