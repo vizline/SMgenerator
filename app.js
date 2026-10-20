@@ -7,7 +7,11 @@ const fields = {
   photo: $('post-image'), avatar: $('avatar-image')
 };
 
-const state = { photo: makePlaceholder(), avatar: makeAvatar(47) };
+const avatars = {
+  female: ['assets/avatars/woman-1.jpg', 'assets/avatars/woman-2.jpg', 'assets/avatars/woman-3.jpg'],
+  male: ['assets/avatars/man-1.jpg', 'assets/avatars/man-2.jpg', 'assets/avatars/man-3.jpg']
+};
+const state = { photo: makePlaceholder(), avatar: avatars.female[0] };
 const formatState = {
   facebook: { layout: 'standard', image: 'original' },
   x: { layout: 'standard', image: 'original' },
@@ -19,7 +23,14 @@ const layoutOptions = {
   instagram: [['standard', 'Post w aplikacji'], ['embed', 'Osadzony post']]
 };
 let activePlatform = 'facebook';
-const names = ['Maja Zielińska', 'Aleksandra Nowak', 'Jan Wysocki', 'Karolina Lis', 'Michał Domański', 'Natalia Borkowska'];
+const people = [
+  { name:'Maja Zielińska', gender:'female' },
+  { name:'Aleksandra Nowak', gender:'female' },
+  { name:'Karolina Lis', gender:'female' },
+  { name:'Natalia Borkowska', gender:'female' },
+  { name:'Jan Wysocki', gender:'male' },
+  { name:'Michał Domański', gender:'male' }
+];
 const texts = [
   'Czasem najlepsze pomysły zaczynają się od zwykłego spotkania. Dziękuję za rozmowy, energię i wspólny dzień ✨',
   'Mały zapis dużego dnia. Wracam z głową pełną pomysłów i wdzięcznością za ludzi, których spotykam po drodze.',
@@ -33,16 +44,6 @@ function makePlaceholder() {
   <rect width="1200" height="800" fill="url(#g)"/><circle cx="950" cy="170" r="95" fill="#fff4d1" opacity=".9"/>
   <path d="M0 610 250 375 430 555 650 290 980 610Z" fill="#355f5a"/><path d="M0 680 310 470 540 660 760 405 1200 690Z" fill="#193c41" opacity=".9"/>
   <rect y="675" width="1200" height="125" fill="#102f34"/><text x="58" y="735" fill="white" opacity=".88" font-family="Arial" font-size="34">Twoje zdjęcie pojawi się tutaj</text></svg>`;
-  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
-}
-
-function makeAvatar(seed = 47) {
-  const palettes = [
-    ['#d7a278','#6e4232','#24394c'], ['#e5b58f','#3b2828','#7b3850'],
-    ['#b97955','#201c24','#315b61'], ['#efc3a4','#b5683c','#3f4b75']
-  ];
-  const [skin, hair, shirt] = palettes[Math.abs(seed) % palettes.length];
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160"><defs><linearGradient id="a" x2="1" y2="1"><stop stop-color="#d9e2e8"/><stop offset="1" stop-color="#9eacb7"/></linearGradient></defs><rect width="160" height="160" fill="url(#a)"/><circle cx="80" cy="69" r="42" fill="${hair}"/><ellipse cx="80" cy="76" rx="31" ry="37" fill="${skin}"/><path d="M48 66c4-30 20-44 42-39 17 4 26 17 25 35-15-5-28-15-38-26-5 15-15 25-29 30Z" fill="${hair}"/><circle cx="68" cy="76" r="2.8" fill="#29252a"/><circle cx="92" cy="76" r="2.8" fill="#29252a"/><path d="M72 93c5 4 11 4 16 0" fill="none" stroke="#8b4f4c" stroke-width="2.5" stroke-linecap="round"/><path d="M27 160c4-34 24-51 53-51s49 17 53 51" fill="${shirt}"/></svg>`;
   return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
 }
 
@@ -132,14 +133,15 @@ $$('.view-button').forEach(button => button.addEventListener('click', () => {
 }));
 
 $('randomize').addEventListener('click', () => {
-  const name = names[Math.floor(Math.random()*names.length)];
-  fields.author.value = name;
-  fields.handle.value = name.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z]/g,'');
+  const person = people[Math.floor(Math.random()*people.length)];
+  fields.author.value = person.name;
+  fields.handle.value = person.name.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z]/g,'');
   fields.text.value = texts[Math.floor(Math.random()*texts.length)];
-  fields.likes.value = Math.floor(70 + Math.random()*2400);
-  fields.comments.value = Math.floor(4 + Math.random()*140);
-  fields.shares.value = Math.floor(1 + Math.random()*60);
-  state.avatar = makeAvatar(Math.floor(1 + Math.random() * 100));
+  fields.likes.value = '';
+  fields.comments.value = '';
+  fields.shares.value = '';
+  const genderAvatars = avatars[person.gender];
+  state.avatar = genderAvatars[Math.floor(Math.random() * genderAvatars.length)];
   update();
 });
 
