@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Edytor wizualnych makiet postów Facebooka, X i Instagrama." />
+  <title>Post Studio — generator makiet</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">Narzędzie do prototypowania</p>
+      <h1>Post Studio</h1>
+    </div>
+    <span class="draft-pill">Makieta · nieopublikowane</span>
+  </header>
+
+  <main class="app-shell">
+    <section class="editor-panel" aria-labelledby="editor-title">
+      <div class="panel-heading">
+        <div>
+          <p class="step-label">01</p>
+          <h2 id="editor-title">Treść posta</h2>
+        </div>
+        <button class="ghost-button" id="randomize" type="button">Losuj szczegóły</button>
+      </div>
+
+      <div class="field-grid">
+        <label class="field field-wide">
+          <span>Zdjęcie posta</span>
+          <span class="upload-zone" tabindex="0">
+            <input id="post-image" type="file" accept="image/*" />
+            <strong>Wybierz zdjęcie</strong>
+            <small>JPG, PNG lub WEBP</small>
+          </span>
+        </label>
+
+        <label class="field">
+          <span>Zdjęcie autora</span>
+          <span class="upload-zone compact" tabindex="0">
+            <input id="avatar-image" type="file" accept="image/*" />
+            <strong>Wybierz avatar</strong>
+          </span>
+        </label>
+
+        <label class="field">
+          <span>Nazwa autora</span>
+          <input id="author" type="text" value="Maja Zielińska" maxlength="60" />
+        </label>
+
+        <label class="field">
+          <span>Nazwa użytkownika</span>
+          <input id="handle" type="text" value="majazielinska" maxlength="40" />
+        </label>
+
+        <label class="field">
+          <span>Data i godzina</span>
+          <input id="post-time" type="datetime-local" />
+        </label>
+
+        <label class="field field-wide">
+          <span>Treść</span>
+          <textarea id="post-text" rows="5" maxlength="1000">Czasem najlepsze pomysły zaczynają się od zwykłego spotkania. Dziękuję za rozmowy, energię i wspólny dzień ✨</textarea>
+          <small class="counter"><span id="char-count">0</span>/1000</small>
+        </label>
+
+        <label class="field">
+          <span>Polubienia</span>
+          <input id="likes" type="number" min="0" max="9999999" value="" placeholder="███" />
+        </label>
+        <label class="field">
+          <span>Komentarze</span>
+          <input id="comments" type="number" min="0" max="9999999" value="" placeholder="███" />
+        </label>
+        <label class="field">
+          <span>Udostępnienia</span>
+          <input id="shares" type="number" min="0" max="9999999" value="" placeholder="███" />
+        </label>
+      </div>
+
+      <p class="privacy-note">Zdjęcia pozostają w tej karcie przeglądarki i nie są wysyłane na serwer.</p>
+    </section>
+
+    <section class="preview-panel" aria-labelledby="preview-title">
+      <div class="panel-heading preview-heading">
+        <div>
+          <p class="step-label">02</p>
+          <h2 id="preview-title">Podgląd</h2>
+        </div>
+        <div class="preview-tools">
+          <button class="copy-button" id="copy-post" type="button" aria-describedby="copy-status"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="11" height="11" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>Kopiuj</button>
+          <span id="copy-status" class="copy-status" aria-live="polite"></span>
+          <div class="view-switch" role="group" aria-label="Rozmiar podglądu">
+            <button class="view-button active" data-view="desktop" type="button" aria-label="Widok szeroki">▭</button>
+            <button class="view-button" data-view="mobile" type="button" aria-label="Widok telefonu">▯</button>
+          </div>
+        </div>
+      </div>
+
+      <nav class="tabs" aria-label="Wybierz portal">
+        <button class="tab active" data-platform="facebook" type="button"><span class="brand-dot fb-dot">f</span> Facebook</button>
+        <button class="tab" data-platform="x" type="button"><span class="brand-dot x-dot">𝕏</span> X</button>
+        <button class="tab" data-platform="instagram" type="button"><span class="brand-dot ig-dot">◎</span> Instagram</button>
+      </nav>
+
+      <div class="format-controls" aria-label="Format makiety">
+        <label><span>Układ posta</span><select id="layout-format"><option value="standard">Standardowy post</option><option value="embed">Osadzony post</option></select></label>
+        <label><span>Kadr zdjęcia</span><select id="image-format"><option value="original">Oryginalny</option><option value="square">Kwadrat 1:1</option><option value="portrait">Pionowy 4:5</option><option value="landscape">Poziomy 16:9</option></select></label>
+      </div>
+
+      <div class="canvas-wrap">
+        <div class="preview-canvas" id="preview-canvas">
+          <article class="post-card facebook-card active-card" data-card="facebook" aria-label="Makieta posta na Facebooku">
+            <div class="fb-head">
+              <img class="avatar avatar-target" alt="Avatar autora" />
+              <div class="identity">
+                <strong class="author-target"></strong>
+                <span><span class="fb-date-target"></span> · <span aria-label="Publiczny">●</span></span>
+              </div>
+              <button class="icon-only" aria-label="Więcej opcji">•••</button>
+            </div>
+            <p class="post-copy text-target"></p>
+            <img class="post-photo photo-target" alt="Zdjęcie dołączone do posta" />
+            <div class="fb-compact-actions">
+              <button type="button" aria-label="Polubienia"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.1 10.2 10.4 3c.3-.7 1.1-1.1 1.9-.8 1.4.5 2.1 2 1.6 3.4l-1.1 3.1h5.5c2 0 3.4 1.9 2.8 3.8l-1.7 5.4a3.8 3.8 0 0 1-3.6 2.7H9.1c-1.1 0-2-.9-2-2v-7.4Z"/><path d="M3 10.2h4.1v10.4H3z"/></svg><span class="likes-target"></span></button>
+              <button type="button" aria-label="Komentarze"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.2 9.5 9.5 0 0 1-3.7-.9L3 20l1.5-4.3A8 8 0 0 1 3 11.5a8.4 8.4 0 0 1 9-8.2 8.4 8.4 0 0 1 9 8.2Z"/></svg><span class="comments-target"></span></button>
+              <button type="button" aria-label="Udostępnienia"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m13.4 5.1 6.1 5.3-6.1 5.3v-3.1c-4.6 0-7.4 1.4-9.3 4.5.6-5.2 3.7-8 9.3-8.6V5.1Z"/></svg><span class="shares-target"></span></button>
+              <span class="fb-reactions" aria-label="Reakcje: Lubię to i Super"><i class="reaction-like"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6.1 8.4 8.6 3c.3-.6 1-.9 1.6-.6 1 .5 1.5 1.6 1.1 2.7l-.8 2.2h4.1c1.4 0 2.4 1.3 2 2.7l-1.2 4a2.7 2.7 0 0 1-2.6 1.9H7.5c-.8 0-1.4-.6-1.4-1.4V8.4ZM3 8.4h3.1v7.5H3z"/></svg></i><i class="reaction-love"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 16.3S3.1 12.2 3.1 7.4A3.7 3.7 0 0 1 10 5.5a3.7 3.7 0 0 1 6.9 1.9c0 4.8-6.9 8.9-6.9 8.9Z"/></svg></i></span>
+            </div>
+          </article>
+
+          <article class="post-card x-card" data-card="x" aria-label="Makieta posta na X">
+            <div class="x-layout">
+              <img class="avatar avatar-target" alt="Avatar autora" />
+              <div class="x-body">
+                <div class="x-identity">
+                  <strong class="author-target"></strong><span class="verified">✓</span>
+                  <span>@<span class="handle-target"></span><span class="native-only"> · <span class="x-short-date-target"></span></span></span>
+                  <b class="x-follow embed-only">Obserwuj</b>
+                  <button class="icon-only" aria-label="Więcej opcji">•••</button>
+                  <span class="x-embed-mark embed-only">𝕏</span>
+                </div>
+                <p class="post-copy text-target"></p>
+                <img class="post-photo photo-target" alt="Zdjęcie dołączone do posta" />
+                <p class="x-time"><span class="x-time-target"></span> · <span class="x-date-target"></span> · <strong><span class="views-target"></span></strong> wyświetleń</p>
+                <div class="x-actions">
+                  <span><svg viewBox="0 0 24 24"><path d="M20.5 11.7a8.4 8.4 0 0 1-8.8 8.1 8.9 8.9 0 0 1-3.5-.8L3.5 20l1.3-3.9a8 8 0 0 1-1.3-4.4 8.4 8.4 0 0 1 8.5-8.2 8.4 8.4 0 0 1 8.5 8.2Z"/></svg><b class="comments-target"></b></span>
+                  <span><svg viewBox="0 0 24 24"><path d="m7 7 3-3 3 3M10 4v11a4 4 0 0 0 4 4h4M17 17l3 3-3 3"/></svg><b class="shares-target"></b></span>
+                  <span><svg viewBox="0 0 24 24"><path d="M20.8 8.2c0 5.5-8.8 10.4-8.8 10.4S3.2 13.7 3.2 8.2A4.7 4.7 0 0 1 12 5.8a4.7 4.7 0 0 1 8.8 2.4Z"/></svg><b class="likes-target"></b></span>
+                  <span><svg viewBox="0 0 24 24"><path d="M5 20V10m5 10V4m5 16v-7m5 7V7"/></svg><b class="views-short-target"></b></span>
+                  <span class="x-end-icons"><svg viewBox="0 0 24 24"><path d="M7 4h10v17l-5-3-5 3V4Z"/></svg><svg viewBox="0 0 24 24"><path d="M12 16V3m0 0L8 7m4-4 4 4M5 13v7h14v-7"/></svg></span>
+                </div>
+                <div class="x-embed-footer embed-only"><span class="x-time-target"></span> · <span class="x-date-target"></span><span class="x-info">ⓘ</span></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="post-card instagram-card" data-card="instagram" aria-label="Makieta posta na Instagramie">
+            <div class="ig-head">
+              <div class="story-ring"><img class="avatar avatar-target" alt="Avatar autora" /></div>
+              <div class="identity">
+                <strong class="handle-target"></strong>
+                <span class="native-only">Warszawa, Polska</span>
+                <span class="embed-only"><span class="followers-target"></span> obserwujących</span>
+              </div>
+              <button class="ig-profile-button embed-only" type="button">Wyświetl profil</button>
+              <button class="icon-only native-only" aria-label="Więcej opcji">•••</button>
+            </div>
+            <img class="post-photo photo-target ig-photo" alt="Zdjęcie dołączone do posta" />
+            <a class="ig-more embed-only" href="#" onclick="return false">Zobacz więcej na Instagramie</a>
+            <div class="ig-actions">
+              <div><button aria-label="Polub"><svg viewBox="0 0 24 24"><path d="M20.8 8.2c0 5.5-8.8 10.4-8.8 10.4S3.2 13.7 3.2 8.2A4.7 4.7 0 0 1 12 5.8a4.7 4.7 0 0 1 8.8 2.4Z"/></svg></button><button aria-label="Komentarz"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 0 1-9 8.2 9.7 9.7 0 0 1-3.8-.9L3 20l1.5-4.3A8 8 0 0 1 3 11.5a8.5 8.5 0 0 1 9-8.2 8.5 8.5 0 0 1 9 8.2Z"/></svg></button><button aria-label="Wyślij"><svg viewBox="0 0 24 24"><path d="m3 11 18-8-7.5 18-2.3-7.8L3 11Zm8.2 2.2L21 3"/></svg></button></div>
+              <button aria-label="Zapisz"><svg viewBox="0 0 24 24"><path d="M6 3.5h12v17L12 17l-6 3.5v-17Z"/></svg></button>
+            </div>
+            <div class="ig-copy">
+              <strong><span class="embed-only">Polubienia: </span><span class="likes-target"></span><span class="native-only"> polubień</span></strong>
+              <p><b class="handle-target"></b> <span class="text-target"></span></p>
+              <p class="muted"><span class="native-only">Zobacz wszystkie komentarze: </span><span class="embed-only">Zobacz wszystkie komentarze (</span><span class="comments-target"></span><span class="embed-only">)</span></p>
+              <span class="ig-date-target uppercase"></span>
+            </div>
+            <div class="ig-add-comment embed-only"><span>Dodaj komentarz...</span><strong>◎</strong></div>
+          </article>
+        </div>
+      </div>
+      <p class="mockup-label">Podgląd demonstracyjny. Elementy nie są połączone z portalami społecznościowymi.</p>
+    </section>
+  </main>
+
+  <script src="html2canvas.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
