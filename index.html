@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Edytor wizualnych makiet postów Facebooka, X i Instagrama." />
   <title>Post Studio — generator makiet</title>
-  <link rel="stylesheet" href="styles.css?v=3" />
+  <link rel="stylesheet" href="styles.css?v=4" />
 </head>
 <body>
   <header class="topbar">
@@ -90,6 +90,7 @@
         </div>
         <div class="preview-tools">
           <button class="copy-button" id="copy-post" type="button" aria-describedby="copy-status"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="11" height="11" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>Kopiuj do schowka</button>
+          <button class="copy-button" id="save-jpg" type="button" aria-describedby="copy-status"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4"/><path d="M5 17v3h14v-3"/></svg>Zapisz jako plik JPG</button>
           <span id="copy-status" class="copy-status" aria-live="polite"></span>
           <div class="view-switch" role="group" aria-label="Rozmiar podglądu">
             <button class="view-button active" data-view="desktop" type="button" aria-label="Widok szeroki">▭</button>
@@ -107,6 +108,7 @@
       <div class="format-controls" aria-label="Format makiety">
         <label><span>Układ posta</span><select id="layout-format"><option value="standard">Standardowy post</option><option value="embed">Osadzony post</option></select></label>
         <label><span>Kadr zdjęcia</span><select id="image-format"><option value="original">Oryginalny</option><option value="square">Kwadrat 1:1</option><option value="portrait">Pionowy 4:5</option><option value="landscape">Poziomy 16:9</option></select></label>
+        <label class="font-toggle"><span>Duża czcionka</span><input id="large-font" type="checkbox" role="switch" aria-label="Powiększ i pogrub treść posta" /></label>
       </div>
 
       <div class="canvas-wrap">
@@ -187,7 +189,7 @@
     </section>
   </main>
 
-  <script src="html2canvas.min.js?v=3"></script>
-  <script src="app.js?v=3"></script>
+  <script src="html2canvas.min.js?v=4"></script>
+  <script src="app.js?v=4"></script>
 </body>
 </html>

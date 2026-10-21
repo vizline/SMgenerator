@@ -67,10 +67,16 @@ input::placeholder { color:#9299a1; font-weight:750; letter-spacing:.08em; opaci
 .fb-dot { background:#1877f2; }
 .x-dot { background:#050505; }
 .ig-dot { background:linear-gradient(135deg,#6b35c6,#df2f73,#f1a22b); }
-.format-controls { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px; }
+.format-controls { display:grid; grid-template-columns:1fr 1fr auto; gap:10px; margin-top:10px; }
 .format-controls label { display:flex; align-items:center; gap:9px; border:1px solid #d8dcdf; background:#fff; border-radius:10px; padding:8px 10px; }
 .format-controls label > span { color:#5e6872; font-size:.7rem; font-weight:750; white-space:nowrap; }
 .format-controls select { width:100%; min-width:0; border:0; background:transparent; color:#1f2933; font-size:.75rem; font-weight:700; outline:none; cursor:pointer; }
+.format-controls .font-toggle { min-width:154px; justify-content:space-between; cursor:pointer; }
+.format-controls .font-toggle input { appearance:none; width:36px; height:20px; flex:none; margin:0; padding:0; border:0; border-radius:999px; background:#c7cdd2; position:relative; cursor:pointer; box-shadow:none; transition:.18s ease; }
+.format-controls .font-toggle input::after { content:""; position:absolute; width:16px; height:16px; left:2px; top:2px; border-radius:50%; background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.24); transition:.18s ease; }
+.format-controls .font-toggle input:checked { background:#1c2731; }
+.format-controls .font-toggle input:checked::after { transform:translateX(16px); }
+.format-controls .font-toggle input:focus-visible { outline:3px solid rgba(89,120,142,.25); outline-offset:2px; }
 
 .canvas-wrap { margin-top:18px; min-height:590px; border-radius:17px; background:#dedfdc; padding:28px 18px; display:flex; justify-content:center; align-items:flex-start; overflow:auto; }
 .preview-canvas { width:min(100%, 680px); transition:width .25s ease; }
@@ -155,6 +161,10 @@ input::placeholder { color:#9299a1; font-weight:750; letter-spacing:.08em; opaci
 .instagram-card.embed-mode .ig-copy { padding-top:2px; }
 .instagram-card.embed-mode .uppercase { display:none; }
 .masked-stat { color:#8b9299 !important; font-weight:750 !important; letter-spacing:.07em; }
+.preview-canvas.large-copy .facebook-card .post-copy,
+.preview-canvas.large-copy .x-card .post-copy { font-size:1.88rem !important; line-height:1.25 !important; font-weight:700; }
+.preview-canvas.large-copy .x-card.embed-mode .post-copy { font-size:2.1rem !important; }
+.preview-canvas.large-copy .instagram-card .ig-copy p .text-target { font-size:1.66rem; line-height:1.25; font-weight:700; }
 
 @media (max-width: 980px) {
   .app-shell { grid-template-columns:1fr; }

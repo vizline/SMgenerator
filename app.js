@@ -150,6 +150,9 @@ $$('.tab').forEach(tab => tab.addEventListener('click', () => {
 
 $('layout-format').addEventListener('change', event => { formatState[activePlatform].layout = event.target.value; applyFormats(); });
 $('image-format').addEventListener('change', event => { formatState[activePlatform].image = event.target.value; applyFormats(); });
+$('large-font').addEventListener('change', event => {
+  $('preview-canvas').classList.toggle('large-copy', event.target.checked);
+});
 
 $$('.view-button').forEach(button => button.addEventListener('click', () => {
   $$('.view-button').forEach(x => x.classList.toggle('active', x === button));
@@ -169,15 +172,24 @@ $('randomize').addEventListener('click', () => {
   update();
 });
 
+async function renderActivePost(backgroundColor = null) {
+  if (!window.html2canvas) throw new Error('html2canvas unavailable');
+  const card = document.querySelector('.post-card.active-card');
+  return window.html2canvas(card, { backgroundColor, scale:2, useCORS:true, logging:false });
+}
+
+function clearActionStatus() {
+  window.setTimeout(() => { $('copy-status').textContent = ''; }, 3200);
+}
+
 $('copy-post').addEventListener('click', async () => {
   const button = $('copy-post');
   const status = $('copy-status');
-  const card = document.querySelector('.post-card.active-card');
   button.disabled = true;
   status.textContent = 'Przygotowuję…';
   try {
-    if (!window.html2canvas || !navigator.clipboard?.write || !window.ClipboardItem) throw new Error('Clipboard image API unavailable');
-    const canvas = await window.html2canvas(card, { backgroundColor:null, scale:2, useCORS:true, logging:false });
+    if (!navigator.clipboard?.write || !window.ClipboardItem) throw new Error('Clipboard image API unavailable');
+    const canvas = await renderActivePost(null);
     const blob = await new Promise((resolve, reject) => canvas.toBlob(value => value ? resolve(value) : reject(new Error('PNG export failed')), 'image/png'));
     await navigator.clipboard.write([new ClipboardItem({ 'image/png':blob })]);
     status.textContent = 'Skopiowano obraz';
@@ -186,7 +198,36 @@ $('copy-post').addEventListener('click', async () => {
     console.error(error);
   } finally {
     button.disabled = false;
-    window.setTimeout(() => { status.textContent = ''; }, 3200);
+    clearActionStatus();
+  }
+});
+
+$('save-jpg').addEventListener('click', async () => {
+  const button = $('save-jpg');
+  const status = $('copy-status');
+  button.disabled = true;
+  status.textContent = 'Przygotowuję JPG…';
+  try {
+    const card = document.querySelector('.post-card.active-card');
+    const background = getComputedStyle(card).backgroundColor || '#ffffff';
+    const canvas = await renderActivePost(background);
+    const blob = await new Promise((resolve, reject) => canvas.toBlob(value => value ? resolve(value) : reject(new Error('JPG export failed')), 'image/jpeg', .94));
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    const stamp = new Date().toISOString().slice(0, 16).replace(/[:T]/g, '-');
+    link.href = url;
+    link.download = `SMgenerator-${activePlatform}-${stamp}.jpg`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    status.textContent = 'Zapisano plik JPG';
+  } catch (error) {
+    status.textContent = 'Nie udało się zapisać JPG';
+    console.error(error);
+  } finally {
+    button.disabled = false;
+    clearActionStatus();
   }
 });
 
